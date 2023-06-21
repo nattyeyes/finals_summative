@@ -81,9 +81,9 @@ app.get('/user/:id', async(req, res) => {
 })
 
 //fetch logged user's order
-app.get('/user/order', async(req, res) => {
+app.get('/user-order', async(req, res) => {
     try {
-        const order = await Order.find({userId: loggedUser._id});
+        const order = await Order.find({});
         res.status(200).json(order);
     } catch (error) {
         res.status(500).json({message: error.message})
@@ -145,13 +145,14 @@ app.post('/order', async(req, res) => {
 //login
 app.post('/user/login', async(req, res) => {
     try {
-        const user = await User.find({email: req.body.email, password: req.body.password})
+        const user = await User.findOne({email: req.body.email, password: req.body.password})
         //user can't be found in database
         if(!user){
             return res.status(404).json({message: `User cannot be found.`})
         }
         loggedUser = user;
         res.status(200).json({message: `Logged in.`});
+        console.log(loggedUser.isAdmin);
 
     } catch (error) {
         res.status(500).json({message: error.message})
